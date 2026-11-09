@@ -28,10 +28,63 @@ def create_incident(
     return new_incident
 
 @router.get("/", response_model=list[IncidentResponse])
-def get_all_incidents(db: Session = Depends(get_db)):
+def get_all_incidents(
+    severity: str | None = None,
+    status: str | None = None,
+    search: str | None = None,
+    skip: int = 0,
+    limit: int = 10,
+    db: Session = Depends(get_db)
+):
+    if skip < 0:
+        raise HTTPException(
+            status_code=400,
+            detail="Skip cannot be negative"
+        )
+
+    if limit < 1 or limit > 100:
+        raise HTTPException(
+            status_code=400,
+            detail="Limit must be between 1 and 100"
+        )
+
+    query = db.query(Incident)
+
+    if severity:
+        allowed_severities = ["low", "medium", "high", "critical"]
+
+        if severity not in allowed_severities:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid severity value"
+            )
+
+        query = query.filter(Incident.severity == severity)
+
+    if status:
+        allowed_statuses = ["open", "investigating", "resolved"]
+
+        if status not in allowed_statuses:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid status value"
+            )
+
+        query = query.filter(Incident.status == status)
+
+    if search and search.strip():
+        search_term = f"%{search.strip()}%"
+
+        query = query.filter(
+            (Incident.title.ilike(search_term)) |
+            (Incident.description.ilike(search_term))
+        )
+
     return (
-        db.query(Incident)
+        query
         .order_by(Incident.created_at.desc())
+        .offset(skip)
+        .limit(limit)
         .all()
     )
 
