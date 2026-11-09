@@ -1,0 +1,177 @@
+
+.log-explorer-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.log-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.log-toolbar .search-box {
+  flex: 1;
+  min-width: 220px;
+}
+
+.log-toolbar select,
+.log-filename-input {
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: white;
+  color: #334155;
+  font: inherit;
+}
+
+.log-filename-input {
+  width: 180px;
+}
+
+.log-sort-toolbar {
+  justify-content: flex-end;
+  margin-top: 0;
+}
+
+.log-sort-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.log-results {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.log-entry-card {
+  padding: 17px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.log-entry-header,
+.log-file-info,
+.log-entry-footer,
+.log-pagination,
+.log-pagination > div {
+  display: flex;
+  align-items: center;
+}
+
+.log-entry-header,
+.log-entry-footer,
+.log-pagination {
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.log-file-info {
+  flex-wrap: wrap;
+  gap: 10px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.log-file-info strong {
+  color: #334155;
+  font-size: 14px;
+}
+
+.log-file-info span {
+  padding: 3px 8px;
+  border-radius: 5px;
+  background: #f1f5f9;
+}
+
+.log-message {
+  margin: 15px 0;
+  padding: 12px;
+  overflow-wrap: anywhere;
+  border-radius: 7px;
+  background: #f8fafc;
+  color: #334155;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.log-entry-footer {
+  flex-wrap: wrap;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.log-empty {
+  padding: 55px 20px;
+  text-align: center;
+  color: #94a3b8;
+}
+
+.log-empty h3 {
+  margin: 12px 0 5px;
+  color: #334155;
+}
+
+.log-empty p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.log-pagination {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid #e2e8f0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.log-pagination > div {
+  gap: 12px;
+}
+
+.log-page-number {
+  min-width: 55px;
+  text-align: center;
+  color: #334155;
+}
+
+.log-pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (max-width: 700px) {
+  .log-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .log-toolbar .search-box,
+  .log-filename-input,
+  .log-toolbar select {
+    width: 100%;
+  }
+
+  .log-sort-toolbar {
+    align-items: stretch;
+  }
+
+  .log-sort-label {
+    margin-bottom: 4px;
+  }
+
+  .log-pagination {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

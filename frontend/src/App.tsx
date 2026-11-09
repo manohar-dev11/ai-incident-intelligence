@@ -40,9 +40,11 @@ import {
   type LogUploadResponse,
 } from "./services/api";
 
+import LogExplorer from "./pages/LogExplorer";
+
 import "./App.css";
 
-type Page = "dashboard" | "incidents" | "upload";
+type Page = "dashboard" | "incidents" | "upload" | "logs";
 
 function App() {
   const [page, setPage] = useState<Page>("dashboard");
@@ -287,7 +289,10 @@ function App() {
             Incidents
           </button>
 
-          <button className="nav-item" disabled>
+          <button
+            className={`nav-item ${page === "logs" ? "active" : ""}`}
+            onClick={() => setPage("logs")}
+          >
             <FileText size={19} />
             Log Explorer
           </button>
@@ -321,7 +326,9 @@ function App() {
                 ? "Dashboard Overview"
                 : page === "incidents"
                   ? "Incident Management"
-                  : "Upload Logs"}
+                  : page === "logs"
+                    ? "Log Explorer"
+                    : "Upload Logs"}
             </h2>
 
             <p>Monitor and manage your application incidents.</p>
@@ -670,6 +677,8 @@ function App() {
               </div>
             </section>
           </>
+        ) : page === "logs" ? (
+          <LogExplorer />
         ) : (
           /* Upload Logs Page */
           <>
@@ -692,9 +701,7 @@ function App() {
               <div className="section-heading">
                 <div>
                   <h2>Import Log File</h2>
-                  <p>
-                    Supported formats: .log and .txt · Maximum size: 5 MB
-                  </p>
+                  <p>Supported formats: .log and .txt · Maximum size: 5 MB</p>
                 </div>
               </div>
 
@@ -737,9 +744,7 @@ function App() {
                     <FileText size={24} />
                     <div>
                       <strong>{selectedFile.name}</strong>
-                      <small>
-                        {(selectedFile.size / 1024).toFixed(2)} KB
-                      </small>
+                      <small>{(selectedFile.size / 1024).toFixed(2)} KB</small>
                     </div>
                   </div>
 

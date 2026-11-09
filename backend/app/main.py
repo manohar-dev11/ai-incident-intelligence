@@ -8,6 +8,7 @@ from app.api.analytics import router as analytics_router
 
 from app.database.connection import Base, engine
 from app.models.incident import Incident
+from app.models.log_entry import LogEntry
 
 Base.metadata.create_all(bind=engine)
 

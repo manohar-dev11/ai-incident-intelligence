@@ -1,37 +1,53 @@
 # AI Incident Intelligence Platform
 
-An intelligent incident management platform designed to help developers track, manage, and investigate application incidents.
+An incident management and log intelligence platform built with **FastAPI, Python, React, TypeScript, and SQLite**. It helps developers track application incidents, upload log files, detect errors, identify severity levels, and explore stored log entries through a web dashboard.
 
-**Project Status:** Backend Foundation Completed — AI and Log Intelligence Features Under Development.
+> **Project status:** Core incident management, analytics, log ingestion, and Log Explorer functionality are implemented. AI-powered root cause analysis and knowledge-base assistance are planned for future development.
 
-## Overview
+## Features
 
-The AI Incident Intelligence Platform aims to simplify application incident management through automated log analysis, incident detection, severity classification, and AI-assisted troubleshooting.
+### Incident Management
+- Create, view, and update incidents.
+- Track incident severity: Low, Medium, High, and Critical.
+- Track incident status: Open, Investigating, and Resolved.
+- Search and filter incidents.
+- Detect duplicate incidents using fingerprints.
 
-The current implementation provides a REST API for managing incidents, backed by an SQLite database.
+### Log Intelligence
+- Upload application log files (`.log` and `.txt`).
+- Parse log files and identify relevant error messages.
+- Detect severity using rule-based patterns.
+- Store detected log entries in SQLite.
+- Generate incidents from detected log events.
+- Avoid creating duplicate incidents.
 
-## Current Features
+### Log Explorer
+- View stored log entries.
+- Search log messages.
+- Filter by severity and filename.
+- Sort by timestamp, line number, severity, and filename.
+- Navigate results using pagination.
 
-- **Incident Creation:** Create incidents with title, description, severity, status, and source.
-- **Incident Listing:** Retrieve all stored incidents.
-- **Incident Details:** Retrieve an individual incident using its ID.
-- **Incident Updates:** Update incident information, including severity and status.
-- **Incident Deletion:** Delete incidents by ID.
-- **Input Validation:** Validate incoming data using Pydantic.
-- **Database Persistence:** Store incident records using SQLite and SQLAlchemy.
-- **Interactive API Documentation:** Explore and test endpoints through Swagger UI.
+### Analytics Dashboard
+- View total incidents.
+- Track open, investigating, and resolved incidents.
+- View incident severity distribution.
+- Monitor incident activity through dashboard visualizations.
 
 ## Technology Stack
 
-| Technology | Purpose |
+| Component | Technology |
 |---|---|
-| Python | Backend programming |
-| FastAPI | REST API development |
-| SQLAlchemy | Database ORM |
-| SQLite | Database |
-| Pydantic | Request and response validation |
-| Uvicorn | ASGI server |
-| Git & GitHub | Version control |
+| Backend | Python, FastAPI |
+| Database | SQLite |
+| ORM | SQLAlchemy |
+| Validation | Pydantic |
+| Frontend | React, TypeScript |
+| Build Tool | Vite |
+| HTTP Client | Axios |
+| Charts | Recharts |
+| Icons | Lucide React |
+| API Documentation | Swagger UI |
 
 ## Project Structure
 
@@ -41,43 +57,55 @@ ai-incident-intelligence/
 ├── backend/
 │   ├── app/
 │   │   ├── api/
-│   │   │   └── incidents.py
-│   │   │
-│   │   ├── core/
+│   │   │   ├── incidents.py
+│   │   │   ├── logs.py
+│   │   │   └── analytics.py
 │   │   ├── database/
 │   │   │   └── connection.py
-│   │   │
 │   │   ├── models/
-│   │   │   └── incident.py
-│   │   │
+│   │   │   ├── incident.py
+│   │   │   └── log_entry.py
 │   │   ├── schemas/
-│   │   │   └── incident.py
-│   │   │
 │   │   ├── services/
+│   │   │   └── log_parser.py
 │   │   └── main.py
-│   │
 │   ├── tests/
-│   └── requirements.txt
+│   ├── requirements.txt
+│   └── .env.example
 │
 ├── data/
 │   ├── knowledge_base/
 │   └── sample_logs/
 │
 ├── docs/
-├── frontend/
-├── scripts/
 │
+├── frontend/
+│   ├── src/
+│   │   ├── pages/
+│   │   │   ├── Incidents.tsx
+│   │   │   ├── LogExplorer.tsx
+│   │   │   └── LogExplorer.css
+│   │   ├── services/
+│   │   │   └── api.ts
+│   │   ├── App.tsx
+│   │   ├── App.css
+│   │   └── index.css
+│   └── package.json
+│
+├── scripts/
 ├── .gitignore
 └── README.md
 ```
 
-## Installation and Setup
+## Getting Started
 
 ### Prerequisites
 
-- Python 3.10 or newer (Python package compatibility may vary)
-- pip
-- Git
+Install the following:
+
+- Python 3.11 or newer (a compatible Python version is recommended for your installed dependencies).
+- Node.js and npm.
+- Git.
 
 ### 1. Clone the repository
 
@@ -86,161 +114,93 @@ git clone https://github.com/manohar-dev11/ai-incident-intelligence.git
 cd ai-incident-intelligence
 ```
 
-### 2. Navigate to the backend
+### 2. Set up the backend
 
-```bash
+Open a terminal in the project directory:
+
+```powershell
 cd backend
-```
-
-### 3. Create a virtual environment
-
-**Windows PowerShell:**
-
-```powershell
 python -m venv .venv
-```
-
-### 4. Activate the virtual environment
-
-```powershell
 .\.venv\Scripts\Activate.ps1
-```
-
-### 5. Install dependencies
-
-```powershell
 pip install -r requirements.txt
 ```
 
-### 6. Start the backend server
+### 3. Start the backend
 
 ```powershell
-uvicorn app.main:app --reload
+python -m uvicorn app.main:app --reload
 ```
 
-The backend will be available at:
+Backend URL:
 
-```text
-http://127.0.0.1:8000
+`http://127.0.0.1:8000`
+
+Interactive API documentation:
+
+`http://127.0.0.1:8000/docs`
+
+### 4. Set up the frontend
+
+Open a second terminal in the project directory:
+
+```powershell
+cd frontend
+npm install
+npm run dev
 ```
 
-## API Documentation
+Frontend URL:
 
-FastAPI automatically generates interactive API documentation.
+`http://localhost:5173`
 
-**Swagger UI:**
+## API Overview
 
-```text
-http://127.0.0.1:8000/docs
-```
+| Endpoint | Purpose |
+|---|---|
+| `GET /health` | Backend health check |
+| `/incidents/` | Incident management |
+| `/logs/` | Log upload and log entry operations |
+| `GET /logs/entries` | Retrieve, filter, sort, and paginate log entries |
+| `GET /analytics/summary` | Dashboard analytics |
 
-**Alternative API documentation:**
+For request parameters, response formats, and interactive testing, visit the Swagger documentation at `/docs`.
 
-```text
-http://127.0.0.1:8000/redoc
-```
+## Log Severity Detection
 
-## Available API Endpoints
+The current parser uses deterministic keyword patterns:
 
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/` | Backend welcome endpoint |
-| GET | `/health` | Check backend health |
-| POST | `/incidents/` | Create an incident |
-| GET | `/incidents/` | Retrieve all incidents |
-| GET | `/incidents/{incident_id}` | Retrieve an incident |
-| PUT | `/incidents/{incident_id}` | Update an incident |
-| DELETE | `/incidents/{incident_id}` | Delete an incident |
+| Detected keywords | Assigned severity |
+|---|---|
+| CRITICAL, FATAL, PANIC | Critical |
+| ERROR, EXCEPTION, TRACEBACK | High |
+| WARN, WARNING | Medium |
 
-## Incident Data Example
+Blank lines and lines without matching severity keywords are ignored by the current parser.
 
-Example request for creating an incident:
+## Planned Improvements
 
-```json
-{
-  "title": "Database Connection Failure",
-  "description": "Application cannot connect to the production database.",
-  "severity": "critical",
-  "status": "open",
-  "source": "manual"
-}
-```
+- AI-powered incident root cause analysis.
+- Local language model integration using Ollama.
+- Retrieval-Augmented Generation (RAG) for knowledge-base assistance.
+- Similar incident recommendations.
+- Automated incident summaries.
+- More comprehensive automated tests.
+- Docker-based deployment.
+- GitHub Actions CI/CD pipeline.
 
-### Supported Severity Levels
+These are planned features and are not represented as currently implemented.
 
-- Low
-- Medium
-- High
-- Critical
+## Development Notes
 
-### Supported Incident Statuses
-
-- Open
-- Investigating
-- Resolved
-
-## Current Development Progress
-
-- [x] Project structure setup
-- [x] Python environment setup
-- [x] FastAPI backend initialization
-- [x] SQLite database integration
-- [x] SQLAlchemy incident model
-- [x] Pydantic validation schemas
-- [x] Create incident API
-- [x] Retrieve all incidents API
-- [x] Retrieve incident by ID API
-- [x] Update incident API
-- [x] Delete incident API
-- [x] Manual Swagger API testing
-
-## Upcoming Features
-
-- [ ] Application log file ingestion
-- [ ] Log parsing and processing
-- [ ] Automatic error detection
-- [ ] Incident severity classification
-- [ ] Automatic incident generation from logs
-- [ ] AI-powered root cause analysis
-- [ ] Retrieval-Augmented Generation (RAG)
-- [ ] Knowledge base integration
-- [ ] React + TypeScript dashboard
-- [ ] Incident analytics and reporting
-- [ ] Automated testing
-- [ ] Docker integration
-- [ ] CI/CD with GitHub Actions
-
-## Project Goals
-
-The long-term goal is to build a practical incident intelligence system that can:
-
-1. Collect application logs.
-2. Identify unusual behavior and errors.
-3. Automatically generate incidents.
-4. Classify incidents based on severity.
-5. Provide AI-assisted root cause analysis.
-6. Recommend troubleshooting steps using technical documentation.
-7. Present incident information through an interactive dashboard.
-
-## Learning Outcomes
-
-This project provides practical experience with:
-
-- REST API development
-- Backend architecture
-- Database design
-- SQLAlchemy ORM
-- Data validation
-- API testing
-- Git and GitHub workflows
-- AI and machine learning integration (planned)
+- The application currently uses SQLite for local persistence.
+- Log severity detection currently relies on rule-based patterns.
+- Duplicate detection applies to incident creation; repeated uploads can still create additional log-entry records.
+- Keep local databases, virtual environments, and secret configuration files out of Git.
 
 ## Author
 
-**Manohar**
+**Manohar Bandra**
 
 GitHub: [@manohar-dev11](https://github.com/manohar-dev11)
 
----
-
-*This project is under active development as a hands-on software engineering portfolio project.*
+Repository: [AI Incident Intelligence Platform](https://github.com/manohar-dev11/ai-incident-intelligence)

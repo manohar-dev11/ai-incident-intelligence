@@ -38,6 +38,34 @@ export interface LogUploadResponse {
   created_incidents: Incident[];
 }
 
+
+export interface LogEntry {
+  id: number;
+  filename: string;
+  line_number: number;
+  severity: "low" | "medium" | "high" | "critical";
+  message: string;
+  created_at: string;
+}
+
+export interface LogEntryListResponse {
+  total: number;
+  skip: number;
+  limit: number;
+  logs: LogEntry[];
+}
+
+export interface LogEntryFilters {
+  severity?: string;
+  search?: string;
+  filename?: string;
+  skip?: number;
+  limit?: number;
+  sort_by?: "created_at" | "line_number" | "severity" | "filename" | "id";
+  order?: "asc" | "desc";
+}
+
+
 export interface IncidentFilters {
   severity?: string;
   status?: string;
@@ -91,5 +119,25 @@ export const uploadLogfile = async (file: File) => {
 
   return response.data;
 };
+
+
+export const getLogEntries = async (
+  filters: LogEntryFilters = {}
+) => {
+  const response = await api.get<LogEntryListResponse>("/logs/entries", {
+    params: {
+      severity: filters.severity || undefined,
+      search: filters.search || undefined,
+      filename: filters.filename || undefined,
+      skip: filters.skip ?? 0,
+      limit: filters.limit ?? 20,
+      sort_by: filters.sort_by ?? "created_at",
+      order: filters.order ?? "desc",
+    },
+  });
+
+  return response.data;
+};
+
 
 export default api;
