@@ -29,6 +29,16 @@ export interface Incident {
   created_at: string;
 }
 
+export interface RootCauseAnalysis {
+  incident_id: number;
+  incident_title: string;
+  category: string;
+  probable_cause: string;
+  confidence: string;
+  recommendations: string[];
+  matched_patterns: string[];
+}
+
 export interface LogUploadResponse {
   filename: string;
   total_lines: number;
@@ -135,6 +145,17 @@ export const getLogEntries = async (
       order: filters.order ?? "desc",
     },
   });
+
+  return response.data;
+};
+
+
+export const analyzeIncident = async (
+  incidentId: number
+): Promise<RootCauseAnalysis> => {
+  const response = await api.post<RootCauseAnalysis>(
+    `/incidents/${incidentId}/analyze`
+  );
 
   return response.data;
 };

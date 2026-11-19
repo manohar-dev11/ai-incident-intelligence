@@ -768,3 +768,85 @@ td {
     justify-content: center;
   }
 }
+
+
+/* Root Cause Analysis */
+
+.rca-section {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.rca-header {
+  margin-bottom: 16px;
+}
+
+.rca-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.rca-header p {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.rca-result {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 12px;
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+.rca-category {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.rca-category span {
+  background: rgba(99, 102, 241, 0.15);
+  color: #a5b4fc;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.rca-detail {
+  margin-bottom: 18px;
+}
+
+.rca-detail strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.rca-detail p,
+.rca-detail li {
+  font-size: 13px;
+  line-height: 1.7;
+  color: #cbd5e1;
+}
+
+.rca-detail ol {
+  padding-left: 20px;
+}
+
+.rca-detail li {
+  margin-bottom: 6px;
+}
+
+.rca-disclaimer {
+  font-size: 12px;
+  color: #94a3b8;
+  line-height: 1.6;
+  border-top: 1px solid rgba(148, 163, 184, 0.15);
+  padding-top: 12px;
+}

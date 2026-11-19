@@ -1,5 +1,5 @@
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
   Activity,
@@ -35,6 +35,8 @@ import {
   getIncidents,
   updateIncident,
   uploadLogfile,
+  analyzeIncident,
+  type RootCauseAnalysis,
   type Analytics,
   type Incident,
   type LogUploadResponse,
@@ -61,6 +63,11 @@ function App() {
 
   const [selectedIncident, setSelectedIncident] =
     useState<Incident | null>(null);
+
+  const [rootCause, setRootCause] = useState<RootCauseAnalysis | null>(null);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analysisError, setAnalysisError] = useState("");
+  const analysisRequestId = useRef(0);
 
   const [updatingId, setUpdatingId] = useState<number | null>(null);
 
@@ -134,6 +141,47 @@ function App() {
     return () => window.clearTimeout(timer);
   }, [page, loadIncidents]);
 
+  // Open and close incident details, clearing previous RCA results.
+  const openIncidentDetails = (incident: Incident) => {
+    analysisRequestId.current += 1;
+    setRootCause(null);
+    setAnalysisError("");
+    setAnalyzing(false);
+    setSelectedIncident(incident);
+  };
+
+  const closeIncidentDetails = () => {
+    analysisRequestId.current += 1;
+    setSelectedIncident(null);
+    setRootCause(null);
+    setAnalysisError("");
+    setAnalyzing(false);
+  };
+
+  // Request a rule-based analysis of the selected incident.
+  const handleAnalyzeIncident = async (incidentId: number) => {
+    const requestId = ++analysisRequestId.current;
+
+    try {
+      setAnalyzing(true);
+      setAnalysisError("");
+      setRootCause(null);
+
+      const result = await analyzeIncident(incidentId);
+      if (requestId !== analysisRequestId.current) return;
+
+      setRootCause(result);
+    } catch (err) {
+      if (requestId !== analysisRequestId.current) return;
+      console.error("Root cause analysis failed:", err);
+      setAnalysisError("Unable to analyze this incident. Please try again.");
+    } finally {
+      if (requestId === analysisRequestId.current) {
+        setAnalyzing(false);
+      }
+    }
+  };
+
   // Update incident status or severity
   const handleUpdate = async (
     incident: Incident,
@@ -148,7 +196,9 @@ function App() {
         [field]: value,
       });
 
-      setSelectedIncident(updatedIncident);
+      setSelectedIncident((current) =>
+        current?.id === updatedIncident.id ? updatedIncident : current,
+      );
 
       if (page === "incidents") {
         await loadIncidents();
@@ -664,7 +714,7 @@ function App() {
                             <button
                               className="action-button"
                               title="View details"
-                              onClick={() => setSelectedIncident(incident)}
+                              onClick={() => openIncidentDetails(incident)}
                             >
                               <Eye size={17} />
                             </button>
@@ -924,7 +974,7 @@ function App() {
       {selectedIncident && (
         <div
           className="modal-backdrop"
-          onClick={() => setSelectedIncident(null)}
+          onClick={closeIncidentDetails}
         >
           <div
             className="incident-modal"
@@ -941,7 +991,7 @@ function App() {
 
               <button
                 className="action-button"
-                onClick={() => setSelectedIncident(null)}
+                onClick={closeIncidentDetails}
               >
                 <X size={20} />
               </button>
@@ -1013,6 +1063,61 @@ function App() {
                 <option value="medium">Medium</option>
                 <option value="low">Low</option>
               </select>
+            </div>
+
+            {/* Root Cause Analysis */}
+            <div className="rca-section">
+              <div className="rca-header">
+                <h3>Root Cause Analysis</h3>
+                <p>Identify possible causes and recommended actions.</p>
+              </div>
+
+              <button
+                className="view-button"
+                disabled={analyzing}
+                onClick={() => void handleAnalyzeIncident(selectedIncident.id)}
+              >
+                {analyzing ? "Analyzing..." : "Analyze Root Cause"}
+              </button>
+
+              {analysisError && (
+                <div className="error-message" role="alert">
+                  {analysisError}
+                </div>
+              )}
+
+              {rootCause?.incident_id === selectedIncident.id && (
+                <div className="rca-result">
+                  <div className="rca-category">
+                    <strong>Category</strong>
+                    <span>{rootCause.category}</span>
+                  </div>
+
+                  <div className="rca-detail">
+                    <strong>Probable Cause</strong>
+                    <p>{rootCause.probable_cause}</p>
+                  </div>
+
+                  <div className="rca-detail">
+                    <strong>Confidence</strong>
+                    <p>{rootCause.confidence.replaceAll("_", " ")}</p>
+                  </div>
+
+                  <div className="rca-detail">
+                    <strong>Recommended Actions</strong>
+                    <ol>
+                      {rootCause.recommendations.map((recommendation, index) => (
+                        <li key={index}>{recommendation}</li>
+                      ))}
+                    </ol>
+                  </div>
+
+                  <p className="rca-disclaimer">
+                    This is rule-based analysis, not a confirmed diagnosis.
+                    Verify the probable cause before taking action.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>

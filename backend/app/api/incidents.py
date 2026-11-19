@@ -4,6 +4,8 @@ from sqlalchemy.orm import Session
 from app.database.connection import get_db
 from app.models.incident import Incident
 from app.schemas.incident import IncidentUpdate, IncidentCreate, IncidentResponse
+from app.services.root_cause_analyzer import analyze_root_cause
+from app.schemas.root_cause import RootCauseResponse
 
 router = APIRouter(
     prefix="/incidents",
@@ -153,5 +155,31 @@ def delete_incident(
         "incident_id": incident_id
     }
 
+
+@router.post("/{incident_id}/analyze", response_model=RootCauseResponse)
+def analyze_incident_root_cause(
+    incident_id: int,
+    db: Session = Depends(get_db),
+):
+    incident = db.query(Incident).filter(
+        Incident.id == incident_id
+    ).first()
+
+    if incident is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Incident not found",
+        )
+
+    result = analyze_root_cause(
+        title=incident.title,
+        description=incident.description,
+    )
+
+    return {
+        "incident_id": incident.id,
+        "incident_title": incident.title,
+        **result,
+    }
 
 
