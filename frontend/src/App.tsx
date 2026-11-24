@@ -1093,8 +1093,14 @@ function App() {
                   </div>
 
                   <div className="rca-detail">
-                    <strong>Confidence</strong>
-                    <p>{rootCause.confidence.replaceAll("_", " ")}</p>
+                    <strong> Analysis Method</strong>
+                    <p>
+                      {rootCause.confidence === "ai_generated_unverified"
+                        ? "AI-generated analysis"
+                        : rootCause.confidence === "rule_match"
+                          ? "Rule-based fallback"
+                          : "Insufficient eveidence"}
+                    </p>
                   </div>
 
                   <div className="rca-detail">
