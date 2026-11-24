@@ -1,0 +1,76 @@
+
+[
+  {
+    "id": "CH-001",
+    "title": "Database connection pool exhausted",
+    "description": "PostgreSQL cannot provide more connections because the pool limit has been reached.",
+    "expected_category": "Database"
+  },
+  {
+    "id": "CH-002",
+    "title": "Slow SQL query",
+    "description": "A SELECT query exceeded the configured statement execution deadline.",
+    "expected_category": "Database"
+  },
+  {
+    "id": "CH-003",
+    "title": "Java heap space exhausted",
+    "description": "A JVM worker terminated with OutOfMemoryError.",
+    "expected_category": "Memory"
+  },
+  {
+    "id": "CH-004",
+    "title": "Heap allocation failure",
+    "description": "The worker cannot allocate additional memory for incoming requests.",
+    "expected_category": "Memory"
+  },
+  {
+    "id": "CH-005",
+    "title": "DNS lookup returned NXDOMAIN",
+    "description": "The internal hostname cannot be resolved by the configured resolver.",
+    "expected_category": "Network"
+  },
+  {
+    "id": "CH-006",
+    "title": "TLS handshake failure",
+    "description": "The proxy could not establish a TLS session with the upstream server.",
+    "expected_category": "Network"
+  },
+  {
+    "id": "CH-007",
+    "title": "HTTP 403 Forbidden",
+    "description": "An authenticated user lacks permission to access the admin endpoint.",
+    "expected_category": "Authentication"
+  },
+  {
+    "id": "CH-008",
+    "title": "OAuth refresh token rejected",
+    "description": "The identity provider rejected the expired refresh credential.",
+    "expected_category": "Authentication"
+  },
+  {
+    "id": "CH-009",
+    "title": "TypeError in request handler",
+    "description": "Request processing failed because an object is not iterable.",
+    "expected_category": "Application"
+  },
+  {
+    "id": "CH-010",
+    "title": "Worker terminated with SIGSEGV",
+    "description": "A native application worker exited with a segmentation fault.",
+    "expected_category": "Application"
+  },
+  {
+    "id": "CH-011",
+    "title": "Unexpected system behavior",
+    "description": "Users reported issues but no logs or diagnostic evidence are available.",
+    "expected_category": "Unknown"
+  },
+  {
+    "id": "CH-012",
+    "title": "Unidentified alert",
+    "description": "Monitoring raised an alert without identifying any affected component.",
+    "expected_category": "Unknown"
+  }
+]
+

@@ -18,6 +18,8 @@ RULES = [
             r"database.*(unavailable|down|failed)",
             r"connection.*refused",
             r"database.*timeout",
+            r"\bsql\b.*\b(?:failed|error)\b",
+            r"\bdeadlock\b",
         ],
         "cause": "Database connectivity or availability issue.",
         "recommendations": [
@@ -48,6 +50,8 @@ RULES = [
             r"network.*unreachable",
             r"host.*unreachable",
             r"connection reset",
+            r"\bdns\b.*\b(?:resolution|failure|failed)\b",
+            r"\bpacket\s+loss\b",
         ],
         "cause": "Possible network connectivity or latency issue.",
         "recommendations": [
@@ -63,6 +67,7 @@ RULES = [
             r"authentication failed",
             r"invalid token",
             r"access denied",
+            r"\b(?:authentication\s+)?token\s+expired\b",
         ],
         "cause": "Possible authentication or authorization failure.",
         "recommendations": [
@@ -71,6 +76,26 @@ RULES = [
             "Review access permissions.",
         ],
     },
+
+
+    {
+        "category": "Application",
+        "patterns": [
+            r"\bapplication\b.*\bcrash(?:ed)?\b",
+            r"\bunhandled\b.*\bexception\b",
+            r"\bnullreference\b.*\bexception\b",
+        ],
+        "cause": (
+            "Possible application error, crash, "
+            "or unhandled exception."
+        ),
+        "recommendations": [
+            "Inspect application error logs and stack traces.",
+            "Identify the failing function or component.",
+            "Review recent code and deployment changes.",
+        ],
+    },
+
 ]
 
 
