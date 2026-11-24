@@ -1,0 +1,75 @@
+
+[
+  {
+    "id": "EVAL-001",
+    "title": "Database connection timeout",
+    "description": "Application failed to establish a database connection within 30 seconds.",
+    "expected_category": "Database"
+  },
+  {
+    "id": "EVAL-002",
+    "title": "SQL query execution failed",
+    "description": "Database returned a transaction deadlock error during payment processing.",
+    "expected_category": "Database"
+  },
+  {
+    "id": "EVAL-003",
+    "title": "High memory usage detected",
+    "description": "Application memory usage reached 95% of available RAM.",
+    "expected_category": "Memory"
+  },
+  {
+    "id": "EVAL-004",
+    "title": "Out of memory exception",
+    "description": "Worker process terminated after exhausting available memory.",
+    "expected_category": "Memory"
+  },
+  {
+    "id": "EVAL-005",
+    "title": "DNS resolution failure",
+    "description": "Application cannot resolve the hostname of an external API.",
+    "expected_category": "Network"
+  },
+  {
+    "id": "EVAL-006",
+    "title": "Network packet loss detected",
+    "description": "Monitoring reports 35% packet loss between application servers.",
+    "expected_category": "Network"
+  },
+  {
+    "id": "EVAL-007",
+    "title": "Authentication token expired",
+    "description": "API requests are rejected because the access token has expired.",
+    "expected_category": "Authentication"
+  },
+  {
+    "id": "EVAL-008",
+    "title": "Invalid login credentials",
+    "description": "Authentication failed for multiple login attempts due to invalid credentials.",
+    "expected_category": "Authentication"
+  },
+  {
+    "id": "EVAL-009",
+    "title": "Application crashed unexpectedly",
+    "description": "The application process exited following an unhandled exception.",
+    "expected_category": "Application"
+  },
+  {
+    "id": "EVAL-010",
+    "title": "Unhandled NullReference exception",
+    "description": "Application request processing failed due to accessing a null object.",
+    "expected_category": "Application"
+  },
+  {
+    "id": "EVAL-011",
+    "title": "Unexpected system behavior",
+    "description": "Users reported intermittent issues, but no diagnostic information is available.",
+    "expected_category": "Unknown"
+  },
+  {
+    "id": "EVAL-012",
+    "title": "Unspecified service issue",
+    "description": "An alert was triggered without an error message or affected component.",
+    "expected_category": "Unknown"
+  }
+]
