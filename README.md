@@ -1,111 +1,62 @@
 # AI Incident Intelligence Platform
 
-An incident management and log intelligence platform built with **FastAPI, Python, React, TypeScript, and SQLite**. It helps developers track application incidents, upload log files, detect errors, identify severity levels, and explore stored log entries through a web dashboard.
+A full-stack application for tracking software incidents, exploring application logs, and investigating possible root causes with local AI.
 
-> **Project status:** Core incident management, analytics, log ingestion, and Log Explorer functionality are implemented. AI-powered root cause analysis and knowledge-base assistance are planned for future development.
+Built with **FastAPI, React, TypeScript, SQLite, and Ollama**, the platform brings incident management, log analysis, and troubleshooting suggestions into a single dashboard.
+
+> **Status:** In active development. The core application, AI-assisted root cause analysis, and an initial classification evaluation tool are implemented.
 
 ## Features
 
-### Incident Management
-- Create, view, and update incidents.
-- Track incident severity: Low, Medium, High, and Critical.
-- Track incident status: Open, Investigating, and Resolved.
-- Search and filter incidents.
-- Detect duplicate incidents using fingerprints.
+### Incident management
 
-### Log Intelligence
-- Upload application log files (`.log` and `.txt`).
-- Parse log files and identify relevant error messages.
-- Detect severity using rule-based patterns.
-- Store detected log entries in SQLite.
-- Generate incidents from detected log events.
-- Avoid creating duplicate incidents.
+- Create, view, update, and delete incidents through the API.
+- Track severity (Low, Medium, High, Critical) and status (Open, Investigating, Resolved).
+- Search and filter incidents, and update their status or severity from the dashboard.
+- Identify duplicate incidents using fingerprints.
 
-### Log Explorer
-- View stored log entries.
-- Search log messages.
-- Filter by severity and filename.
-- Sort by timestamp, line number, severity, and filename.
-- Navigate results using pagination.
+### Log analysis
 
-### Analytics Dashboard
-- View total incidents.
-- Track open, investigating, and resolved incidents.
-- View incident severity distribution.
-- Monitor incident activity through dashboard visualizations.
+- Upload `.log` and `.txt` files (up to 5 MB).
+- Parse logs and detect severity using keyword-based rules.
+- Create incidents from detected events while avoiding duplicate incident creation.
+- Browse stored log entries with search, filters, sorting, and pagination.
 
-## Technology Stack
+### Dashboard
 
-| Component | Technology |
+- View incident counts, current statuses, and recent incidents.
+- Explore severity distribution through charts.
+- Open incident details and request root cause analysis.
+
+### AI-assisted root cause analysis
+
+- Analyze incident titles and descriptions with **Qwen2.5 1.5B** running locally through **Ollama**.
+- Receive a probable cause, incident category, and troubleshooting recommendations.
+- Use predefined rules when Ollama is unavailable or the AI response is invalid.
+- Prefer a recognized rule-based classification when it conflicts with the AI category.
+- See whether an analysis came from the AI model or the rule engine.
+
+AI output is a **suggestion, not a confirmed diagnosis**. The system does not automatically verify root causes or apply fixes.
+
+## Tech stack
+
+| Layer | Technology |
 |---|---|
-| Backend | Python, FastAPI |
+| Backend | Python, FastAPI, SQLAlchemy, Pydantic |
 | Database | SQLite |
-| ORM | SQLAlchemy |
-| Validation | Pydantic |
-| Frontend | React, TypeScript |
-| Build Tool | Vite |
-| HTTP Client | Axios |
-| Charts | Recharts |
-| Icons | Lucide React |
-| API Documentation | Swagger UI |
+| Frontend | React, TypeScript, Vite |
+| UI and charts | Lucide React, Recharts |
+| API requests | Axios |
+| Local AI | Ollama, Qwen2.5 1.5B |
+| Testing | Python `unittest` |
 
-## Project Structure
+## Getting started
 
-```text
-ai-incident-intelligence/
-│
-├── backend/
-│   ├── app/
-│   │   ├── api/
-│   │   │   ├── incidents.py
-│   │   │   ├── logs.py
-│   │   │   └── analytics.py
-│   │   ├── database/
-│   │   │   └── connection.py
-│   │   ├── models/
-│   │   │   ├── incident.py
-│   │   │   └── log_entry.py
-│   │   ├── schemas/
-│   │   ├── services/
-│   │   │   └── log_parser.py
-│   │   └── main.py
-│   ├── tests/
-│   ├── requirements.txt
-│   └── .env.example
-│
-├── data/
-│   ├── knowledge_base/
-│   └── sample_logs/
-│
-├── docs/
-│
-├── frontend/
-│   ├── src/
-│   │   ├── pages/
-│   │   │   ├── Incidents.tsx
-│   │   │   ├── LogExplorer.tsx
-│   │   │   └── LogExplorer.css
-│   │   ├── services/
-│   │   │   └── api.ts
-│   │   ├── App.tsx
-│   │   ├── App.css
-│   │   └── index.css
-│   └── package.json
-│
-├── scripts/
-├── .gitignore
-└── README.md
-```
+### Requirements
 
-## Getting Started
-
-### Prerequisites
-
-Install the following:
-
-- Python 3.11 or newer (a compatible Python version is recommended for your installed dependencies).
-- Node.js and npm.
-- Git.
+- Python and pip
+- Node.js and npm
+- [Ollama](https://ollama.com/download) for AI-generated analysis (optional for rule-based analysis)
 
 ### 1. Clone the repository
 
@@ -114,34 +65,37 @@ git clone https://github.com/manohar-dev11/ai-incident-intelligence.git
 cd ai-incident-intelligence
 ```
 
-### 2. Set up the backend
+### 2. Start the backend
 
-Open a terminal in the project directory:
+On Windows PowerShell:
 
 ```powershell
 cd backend
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-```
-
-### 3. Start the backend
-
-```powershell
+python -m pip install -r requirements.txt
 python -m uvicorn app.main:app --reload
 ```
 
-Backend URL:
+The backend runs at **http://127.0.0.1:8000**. Interactive API documentation is available at **http://127.0.0.1:8000/docs**.
 
-`http://127.0.0.1:8000`
+Run the backend from the `backend` directory so the application imports and local SQLite database path resolve correctly.
 
-Interactive API documentation:
+### 3. Set up local AI (optional)
 
-`http://127.0.0.1:8000/docs`
+Install Ollama, then download the model:
 
-### 4. Set up the frontend
+```powershell
+ollama pull qwen2.5:1.5b
+```
 
-Open a second terminal in the project directory:
+Ensure the Ollama service is running. By default, the backend connects to Ollama at `http://127.0.0.1:11434`.
+
+Without Ollama, incident analysis can still return rule-based recommendations.
+
+### 4. Start the frontend
+
+Open a **second terminal** from the project root:
 
 ```powershell
 cd frontend
@@ -149,58 +103,78 @@ npm install
 npm run dev
 ```
 
-Frontend URL:
+Open **http://localhost:5173**.
 
-`http://localhost:5173`
+## How it works
 
-## API Overview
+1. Upload an application log or manage an incident manually.
+2. The backend stores incidents and parsed log entries in SQLite.
+3. Use the dashboard to search, filter, and inspect incidents.
+4. Select **Analyze Root Cause** from an incident's details.
+5. The backend requests an AI analysis from Ollama, validates the response, and uses rule-based analysis where needed.
+6. Review the suggested cause and troubleshooting steps before taking action.
 
-| Endpoint | Purpose |
-|---|---|
-| `GET /health` | Backend health check |
-| `/incidents/` | Incident management |
-| `/logs/` | Log upload and log entry operations |
-| `GET /logs/entries` | Retrieve, filter, sort, and paginate log entries |
-| `GET /analytics/summary` | Dashboard analytics |
+## API endpoints
 
-For request parameters, response formats, and interactive testing, visit the Swagger documentation at `/docs`.
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/health` | Health check |
+| GET / POST | `/incidents/` | List or create incidents |
+| GET / PUT / DELETE | `/incidents/{incident_id}` | Read, update, or delete an incident |
+| POST | `/incidents/{incident_id}/analyze` | Analyze an incident's probable root cause |
+| POST | `/logs/upload` | Upload and parse a log file |
+| GET | `/logs/entries` | Search and browse log entries |
+| GET | `/analytics/summary` | Dashboard statistics |
 
-## Log Severity Detection
+See **`/docs`** for request parameters and response schemas.
 
-The current parser uses deterministic keyword patterns:
+## Classification evaluation
 
-| Detected keywords | Assigned severity |
-|---|---|
-| CRITICAL, FATAL, PANIC | Critical |
-| ERROR, EXCEPTION, TRACEBACK | High |
-| WARN, WARNING | Medium |
+The repository includes a small evaluation tool for the **rule-based incident classifier**. It checks predictions against labeled examples and reports accuracy and misclassified cases.
 
-Blank lines and lines without matching severity keywords are ignored by the current parser.
+| Dataset | Correct | Accuracy |
+|---|---:|---:|
+| Development (12 cases) | 12/12 | 100% |
+| Challenge (12 cases) | 2/12 | 16.67% |
 
-## Planned Improvements
+These are results on **small, synthetic datasets**, not production performance figures or measurements of the Ollama model. The rules were refined using the development cases; the challenge cases exposed gaps in handling unfamiliar terminology.
 
-- AI-powered incident root cause analysis.
-- Local language model integration using Ollama.
-- Retrieval-Augmented Generation (RAG) for knowledge-base assistance.
-- Similar incident recommendations.
-- Automated incident summaries.
-- More comprehensive automated tests.
-- Docker-based deployment.
-- GitHub Actions CI/CD pipeline.
+Run the evaluations from `backend`:
 
-These are planned features and are not represented as currently implemented.
+```powershell
+python -m app.evaluation.evaluate --dataset development
+python -m app.evaluation.evaluate --dataset challenge
+```
 
-## Development Notes
+Run the backend unit tests:
 
-- The application currently uses SQLite for local persistence.
-- Log severity detection currently relies on rule-based patterns.
-- Duplicate detection applies to incident creation; repeated uploads can still create additional log-entry records.
-- Keep local databases, virtual environments, and secret configuration files out of Git.
+```powershell
+python -m unittest discover -s app/tests -p "test_*.py" -v
+```
+
+More details are in [`docs/evaluation_baseline.md`](docs/evaluation_baseline.md).
+
+## Current limitations
+
+- Severity detection and fallback classification rely on predefined patterns.
+- AI-generated explanations may be incomplete or incorrect.
+- The local model's speed depends on available system resources.
+- The evaluation datasets are small and synthetic.
+- The app currently uses SQLite for local persistence.
+
+## What's next
+
+- Compare AI-only, rule-based, and hybrid classification on broader test cases.
+- Add a searchable knowledge base and retrieval-augmented assistance.
+- Find similar historical incidents and improve investigation context.
+- Expand automated API tests and introduce CI checks.
+- Add deployment support and improve frontend performance.
 
 ## Author
 
-**Manohar Bandra**
-
+**Manohar Bandra**  
 GitHub: [@manohar-dev11](https://github.com/manohar-dev11)
 
-Repository: [AI Incident Intelligence Platform](https://github.com/manohar-dev11/ai-incident-intelligence)
+---
+
+*Built to explore how full-stack development and local AI can make incident investigation more useful.*
